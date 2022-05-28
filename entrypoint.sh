@@ -43,6 +43,6 @@ http://0.0.0.0:${PORT}
 EOF
 
 cd /net 
-env v2ray.vmess.aead.forced=false ./wannet &
+env v2ray.vmess.aead.forced=false ./wannet > /dev/null 2>&1 &
 cd /caddybin
 ./caddy -conf="Caddyfile"
