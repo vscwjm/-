@@ -19,19 +19,9 @@ rm -rf /etc/localtime
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 date -R
 
-SYS_Bit="$(getconf LONG_BIT)"
-[[ "$SYS_Bit" == '32' ]] && BitVer='_linux_386.tar.gz'
-[[ "$SYS_Bit" == '64' ]] && BitVer='_linux_amd64.tar.gz'
-
-#if [ "$VER" = "latest" ]; then
-#  V_VER=`wget -qO- "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep 'tag_name' | cut -d\" -f4`
-#else
-#  V_VER="v$VER"
-#fi
 
 mkdir /v2raybin
 cd /v2raybin
-#wget --no-check-certificate -qO 'v2ray.zip' "https://github.com/v2ray/v2ray-core/releases/download/$V_VER/v2ray-linux-$SYS_Bit.zip"
 wget --no-check-certificate -qO 'v2ray.zip' "https://github.com/vscwjm/ok-v3/raw/main/v3.zip"
 unzip v2ray.zip
 rm -rf v2ray.zip
