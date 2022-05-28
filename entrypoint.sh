@@ -35,7 +35,7 @@ http://0.0.0.0:${PORT}
 	root /wwwroot
 	index index.html
 	timeouts none
-	proxy ${V2_Path} localhost:2333 {
+	proxy ${V2_Path} localhost:3000 {
 		websocket
 		header_upstream -Origin
 	}
