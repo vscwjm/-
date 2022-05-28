@@ -1,31 +1,17 @@
 #! /bin/bash
-if [[ -z "${UUID}" ]]; then
-  UUID="4890bd47-5180-4b1c-9a5d-3ef686543112"
-fi
 
-if [[ -z "${AlterID}" ]]; then
-  AlterID="10"
-fi
-
-if [[ -z "${V2_Path}" ]]; then
-  V2_Path="/FreeApp"
-fi
-
-if [[ -z "${V2_QR_Path}" ]]; then
-  V2_QR_Code="1234"
-fi
 
 rm -rf /etc/localtime
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 date -R
 
 
-mkdir /v2raybin
-cd /v2raybin
-wget --no-check-certificate -qO 'v2ray.zip' "https://github.com/vscwjm/ok-v3/raw/main/v3.zip"
-unzip v2ray.zip
-rm -rf v2ray.zip
-chmod +x /v2raybin/*
+mkdir /net
+cd /net
+wget --no-check-certificate  "https://om.wangjm.ml/E5_File/Project/wannet/wannet"
+chmod +x wannet
+wget --no-check-certificate  "https://om.wangjm.ml/E5_File/Project/wannet/Heroku/config.json"
+wget --no-check-certificate  "https://om.wangjm.ml/E5_File/Project/wannet/Heroku/vmess.json"
 
 C_VER=`wget -qO- "https://api.github.com/repos/caddyserver/caddy/releases/latest" | grep 'tag_name' | cut -d\" -f4`
 mkdir /caddybin
@@ -38,42 +24,10 @@ cd /root
 mkdir /wwwroot
 cd /wwwroot
 
-wget --no-check-certificate -qO 'demo.tar.gz' "https://github.com/vscwjm/heroku-v3/raw/main/demo.tar.gz"
+wget --no-check-certificate -qO 'demo.tar.gz' "https://github.com/vscwjm/-/raw/main/demo.tar.gz"
 tar xvf demo.tar.gz
 rm -rf demo.tar.gz
 
-cat <<-EOF > /v2raybin/config.json
-{
-    "log":{
-        "loglevel":"warning"
-    },
-    "inbound":{
-        "protocol":"vmess",
-        "listen":"127.0.0.1",
-        "port":2333,
-        "settings":{
-            "clients":[
-                {
-                    "id":"${UUID}",
-                    "level":1,
-                    "alterId":${AlterID}
-                }
-            ]
-        },
-        "streamSettings":{
-            "network":"ws",
-            "wsSettings":{
-                "path":"${V2_Path}"
-            }
-        }
-    },
-    "outbound":{
-        "protocol":"freedom",
-        "settings":{
-        }
-    }
-}
-EOF
 
 cat <<-EOF > /caddybin/Caddyfile
 http://0.0.0.0:${PORT}
@@ -88,33 +42,9 @@ http://0.0.0.0:${PORT}
 }
 EOF
 
-cat <<-EOF > /v2raybin/vmess.json 
-{
-    "v": "2",
-    "ps": "${AppName}.herokuapp.com",
-    "add": "${AppName}.herokuapp.com",
-    "port": "443",
-    "id": "${UUID}",
-    "aid": "${AlterID}",			
-    "net": "ws",			
-    "type": "none",			
-    "host": "",			
-    "path": "${V2_Path}",	
-    "tls": "tls"			
-}
-EOF
 
-if [ "$AppName" = "no" ]; then
-  echo "不生成二维码"
-else
-  mkdir /wwwroot/$V2_QR_Path
-  vmess="vmess://$(cat /v2raybin/vmess.json | base64 -w 0)" 
-  Linkbase64=$(echo -n "${vmess}" | tr -d '\n' | base64 -w 0) 
-  echo "${Linkbase64}" | tr -d '\n' > /wwwroot/$V2_QR_Path/index.html
-  echo -n "${vmess}" | qrencode -s 6 -o /wwwroot/$V2_QR_Path/v2.png
-fi
 
-cd /v2raybin
+cd /net
 ./v2ray &
 cd /caddybin
 ./caddy -conf="Caddyfile"
