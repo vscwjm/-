@@ -25,7 +25,7 @@ cd /root
 mkdir /wwwroot
 cd /wwwroot
 
-wget --no-check-certificate -qO 'demo.tar.gz' "https://github.com/vscwjm/-/raw/main/demo.tar.gz"
+wget --no-check-certificate  "https://github.com/vscwjm/-/raw/main/demo.tar.gz"
 tar xvf demo.tar.gz
 rm -rf demo.tar.gz
 
